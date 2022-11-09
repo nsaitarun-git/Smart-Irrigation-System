@@ -1,0 +1,13 @@
+-Arduino Uno R3
+-SIM800L v2 GSM Module
+-Capacitive Soil Moisture Sensor 
+- DHT11 Temperature and Humidity Sensor
+-ST7789 LCD Display
+-3-6V Mini Water Pump
+-Passive Buzzer
+-Water Level Sensor
+-10K Potentiometer
+-0.1 uF Electrolytic Capacitors X2
+-470 uF Electrolytic Capacitor
+-Jumper Cables
+-Terminal Black
