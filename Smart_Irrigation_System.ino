@@ -1,24 +1,20 @@
 //Smart Irrigation System by Saitarun Nadipineni 
+#include <Adafruit_GFX.h>
+#include <Arduino_ST7789_Fast.h>
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <SoftwareSerial.h>
+#define Type DHT11
 
 int DC=9;
 int RST=8;
 int SCRH=240;
 int SCRW=240;
 
-#include <Adafruit_GFX.h>
-#include <Arduino_ST7789_Fast.h>
-#include <Adafruit_Sensor.h>
-#include <DHT.h>
-#include <SoftwareSerial.h>
-Arduino_ST7789 lcd=Arduino_ST7789(DC,RST);
-
 int TX=2;
 int RX=3;
-SoftwareSerial gsm(TX,RX);
 
-#define Type DHT11
 int HTPin=A0;
-DHT HT(HTPin,Type);
 float temp;
 float humidity;
 
@@ -41,6 +37,9 @@ int buzzer=6;
 int CMLevel;
 int flag=0;
 
+Arduino_ST7789 lcd=Arduino_ST7789(DC,RST);
+SoftwareSerial gsm(TX,RX);
+DHT HT(HTPin,Type);
 
 void setup() {
   Serial.begin(115200);
@@ -63,7 +62,7 @@ void setup() {
   waterLevelPer=map(waterLevel,waterLevelMin,waterLevelMax,0,100);
   if(waterLevelPer<40){
     SendMessage2();
-  }
+   }
   }
 
 void loop() {
