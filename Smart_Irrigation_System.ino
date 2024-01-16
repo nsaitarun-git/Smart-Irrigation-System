@@ -41,75 +41,6 @@ Arduino_ST7789 lcd=Arduino_ST7789(DC,RST);
 SoftwareSerial gsm(TX,RX);
 DHT HT(HTPin,Type);
 
-void setup() {
-  Serial.begin(115200);
-  digitalWrite(relay,HIGH);
-  HT.begin();
-  gsm.begin(115200);
-  lcd.init(SCRH,SCRW);
-  pinMode(soilSensorPin,INPUT);
-  pinMode(waterLevelSensor,INPUT);
-  pinMode(relay,OUTPUT);
-  pinMode(potPin,INPUT);
-  pinMode(buzzer,OUTPUT);
-  delay(1000);
-  StartScreen();
-  SystemReady();
-  lcd.fillScreen(BLACK);
-  lcd.drawRect(0,0,240,240,YELLOW);
-
-  waterLevel=analogRead(waterLevelSensor);
-  waterLevelPer=map(waterLevel,waterLevelMin,waterLevelMax,0,100);
-  if(waterLevelPer<40){
-    SendMessage2();
-   }
-  }
-
-void loop() {
-
-  soilState=analogRead(soilSensorPin);
-  soilMoisturePer=map(soilState,soilMoistureMax,soilMoistureMin,0,100);
-
-  waterLevel=analogRead(waterLevelSensor);
-  waterLevelPer=map(waterLevel,waterLevelMin,waterLevelMax,0,100);
-
-  potVal=analogRead(potPin);
-  CMLevel=map(potVal,0,1023,0,100);
- 
-  PrintData();
-  ReadHT();
-  
-if(soilMoisturePer<CMLevel){
-    while(flag==0){
-      soilState=analogRead(soilSensorPin);
-      soilMoisturePer=map(soilState,soilMoistureMax,soilMoistureMin,0,100);
-      
-      waterLevel=analogRead(waterLevelSensor);
-      waterLevelPer=map(waterLevel,waterLevelMin,waterLevelMax,0,100);
-
-      potVal=analogRead(potPin);
-      CMLevel=map(potVal,0,1023,0,100);
-      
-      digitalWrite(relay,LOW);
-      tone(buzzer,2000,500);
-      
-      PrintData();
-      ReadHT();
-      
-      if(soilMoisturePer>=CMLevel){
-        digitalWrite(relay,HIGH);
-        break;
-       }
-      }
-    SendMessage();
-    if(waterLevelPer<40){
-    SendMessage2();
-     }
-    }else{
-      digitalWrite(relay,HIGH);
-    }
-}
-
 void StartScreen(){
   lcd.fillScreen(WHITE);
   tone(buzzer,1000,500);
@@ -380,4 +311,73 @@ lcd.println("  Message Sent!   ");
 delay(3000);
 lcd.fillScreen(BLACK);
 lcd.drawRect(0,0,240,240,YELLOW);
+}
+
+void setup() {
+  Serial.begin(115200);
+  digitalWrite(relay,HIGH);
+  HT.begin();
+  gsm.begin(115200);
+  lcd.init(SCRH,SCRW);
+  pinMode(soilSensorPin,INPUT);
+  pinMode(waterLevelSensor,INPUT);
+  pinMode(relay,OUTPUT);
+  pinMode(potPin,INPUT);
+  pinMode(buzzer,OUTPUT);
+  delay(1000);
+  StartScreen();
+  SystemReady();
+  lcd.fillScreen(BLACK);
+  lcd.drawRect(0,0,240,240,YELLOW);
+
+  waterLevel=analogRead(waterLevelSensor);
+  waterLevelPer=map(waterLevel,waterLevelMin,waterLevelMax,0,100);
+  if(waterLevelPer<40){
+    SendMessage2();
+   }
+  }
+
+void loop() {
+
+  soilState=analogRead(soilSensorPin);
+  soilMoisturePer=map(soilState,soilMoistureMax,soilMoistureMin,0,100);
+
+  waterLevel=analogRead(waterLevelSensor);
+  waterLevelPer=map(waterLevel,waterLevelMin,waterLevelMax,0,100);
+
+  potVal=analogRead(potPin);
+  CMLevel=map(potVal,0,1023,0,100);
+ 
+  PrintData();
+  ReadHT();
+  
+if(soilMoisturePer<CMLevel){
+    while(flag==0){
+      soilState=analogRead(soilSensorPin);
+      soilMoisturePer=map(soilState,soilMoistureMax,soilMoistureMin,0,100);
+      
+      waterLevel=analogRead(waterLevelSensor);
+      waterLevelPer=map(waterLevel,waterLevelMin,waterLevelMax,0,100);
+
+      potVal=analogRead(potPin);
+      CMLevel=map(potVal,0,1023,0,100);
+      
+      digitalWrite(relay,LOW);
+      tone(buzzer,2000,500);
+      
+      PrintData();
+      ReadHT();
+      
+      if(soilMoisturePer>=CMLevel){
+        digitalWrite(relay,HIGH);
+        break;
+       }
+      }
+    SendMessage();
+    if(waterLevelPer<40){
+    SendMessage2();
+     }
+    }else{
+      digitalWrite(relay,HIGH);
+    }
 }
